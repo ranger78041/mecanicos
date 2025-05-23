@@ -1,0 +1,1 @@
+// Eliminado. Usar inputs HTML estándar con Tailwind.

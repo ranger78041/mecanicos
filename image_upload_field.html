@@ -1,0 +1,28 @@
+<!-- Modificación del formulario para incluir campo de subida de imágenes -->
+<div>
+  <label for="image" class="block text-sm font-medium text-slate-700 mb-1">Imagen (Opcional)</label>
+  <div class="flex items-center space-x-2">
+    <label for="image" class="cursor-pointer flex-grow">
+      <div class="w-full px-4 py-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition duration-150 ease-in-out text-slate-800 placeholder-slate-400 bg-white flex items-center justify-between">
+        <span id="image-name" class="truncate">Ningún archivo seleccionado</span>
+        <span class="bg-sky-100 text-sky-700 px-3 py-1 rounded-md text-sm font-medium">Seleccionar</span>
+      </div>
+    </label>
+    <button type="button" id="camera-button" class="p-3 bg-sky-600 text-white rounded-lg hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 transition-colors" aria-label="Tomar foto">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
+        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
+      </svg>
+    </button>
+  </div>
+  <input type="file" id="image" name="image" accept="image/*" class="hidden" capture="environment">
+  <p class="text-xs text-slate-500 mt-1">Puedes subir una imagen de la falla mecánica (máx. 5MB)</p>
+  <div id="image-preview" class="hidden mt-2 relative">
+    <img src="" alt="Vista previa" class="w-full h-auto max-h-48 object-contain rounded-lg border border-slate-300">
+    <button type="button" id="remove-image" class="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+</div>

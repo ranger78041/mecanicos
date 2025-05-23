@@ -1,0 +1,1 @@
+// Eliminado. SVG en index.html.

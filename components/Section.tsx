@@ -1,0 +1,1 @@
+// Eliminado. No se usa en versión estática.

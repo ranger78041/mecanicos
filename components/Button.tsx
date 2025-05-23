@@ -1,0 +1,1 @@
+// Eliminado. Usar botones HTML estándar con Tailwind.

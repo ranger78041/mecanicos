@@ -1,0 +1,544 @@
+
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Taller Mecánico ProMonterrey - Servicios profesionales de mecánica automotriz en Monterrey. Expertos en todas las marcas. ¡Contáctanos!">
+    <title>Taller Mecánico ProMonterrey | Expertos en Monterrey</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <style>
+      /* Custom scrollbar for a more modern look (optional) */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+      .hero-bg-image {
+        background-image: url('images/hero-banner.jpg'); /* REEMPLAZAR CON TU IMAGEN */
+      }
+      .gallery-img {
+        object-fit: cover;
+        aspect-ratio: 16/9; /* Or 4/3, or 1/1 depending on typical photo orientation */
+      }
+      .testimonial-item {
+        /* display: none; */ /* Managed by JS opacity for transitions */
+        transition: opacity 0.5s ease-in-out;
+      }
+      .testimonial-item.active {
+        display: block;
+      }
+      /* Lightbox styles */
+      #lightbox {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.85); /* Darker overlay */
+        display: none; /* Hidden by default */
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        padding: 1rem;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+      }
+      #lightbox.active {
+        display: flex;
+        opacity: 1;
+      }
+      #lightbox img {
+        max-width: 90%;
+        max-height: 85vh;
+        object-fit: contain; /* Changed to contain to show full image */
+        border-radius: 0.5rem;
+        background-color: white; /* Optional if images have no transparency */
+        padding: 0.25rem; /* Small border/padding around image */
+        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      }
+      #lightbox-close {
+        position: absolute;
+        top: 1.5rem; /* Adjusted for better visibility */
+        right: 1.5rem; /* Adjusted for better visibility */
+        /* Further styling in script.js if needed or use Tailwind */
+      }
+      .scroll-to-top-transition {
+         transition: opacity 0.3s ease-in-out;
+      }
+    </style>
+</head>
+  <body class="bg-slate-100 text-slate-800 antialiased">
+    <div class="flex flex-col min-h-screen">
+      <!-- Navbar -->
+      <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex items-center justify-between h-20">
+            <a href="#inicio-hero" class="flex items-center space-x-2 text-xl font-bold text-slate-800 md:text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-7 w-7 text-red-500">
+                <title>Servicios Mecánicos ProMonterrey</title>
+                <path d="M12.525 10.705L9.293 7.473a1.25 1.25 0 00-1.768 0L6.101 8.897a1.25 1.25 0 000 1.768l3.232 3.232-4.038 4.038a3.752 3.752 0 000 5.304 3.752 3.752 0 005.304 0l4.038-4.038 3.232 3.232a1.25 1.25 0 001.768 0l1.424-1.424a1.25 1.25 0 000-1.768l-3.232-3.232 4.366-4.366a.75.75 0 00-1.06-1.06l-4.367 4.366-1.5-1.5z"/>
+                <path d="M13.232 3.232a3.752 3.752 0 00-5.304 0L4.038 7.122a.75.75 0 001.061 1.06L8.8 4.293a2.25 2.25 0 013.182 0l1.768 1.768a2.25 2.25 0 010 3.182L9.859 13.135a.75.75 0 001.06 1.06l3.891-3.891a3.752 3.752 0 000-5.304L13.232 3.232z"/>
+              </svg>
+              <span>ProMonterrey</span>
+            </a>
+
+            <nav class="hidden md:flex space-x-1 lg:space-x-2" id="desktop-nav">
+              <a href="#inicio-hero" class="nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors text-slate-700 hover:text-sky-600 md:text-slate-200 md:hover:text-white">Inicio</a>
+              <a href="#servicios" class="nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors text-slate-700 hover:text-sky-600 md:text-slate-200 md:hover:text-white">Servicios</a>
+              <a href="#nosotros" class="nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors text-slate-700 hover:text-sky-600 md:text-slate-200 md:hover:text-white">Nosotros</a>
+              <a href="#galeria" class="nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors text-slate-700 hover:text-sky-600 md:text-slate-200 md:hover:text-white">Galería</a>
+              <a href="#marcas" class="nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors text-slate-700 hover:text-sky-600 md:text-slate-200 md:hover:text-white">Marcas</a>
+              <a href="#testimonios" class="nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors text-slate-700 hover:text-sky-600 md:text-slate-200 md:hover:text-white">Testimonios</a>
+              <a href="#promociones" class="nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors text-slate-700 hover:text-sky-600 md:text-slate-200 md:hover:text-white">Promociones</a>
+              <a href="#contacto" class="nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors text-slate-700 hover:text-sky-600 md:text-slate-200 md:hover:text-white">Contacto</a>
+            </nav>
+
+            <div class="md:hidden">
+              <button id="mobile-menu-button" class="p-2 rounded-md focus:outline-none text-slate-700 hover:text-sky-600" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
+                <svg id="menu-icon-open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-7 w-7">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+                <svg id="menu-icon-close" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-7 w-7 hidden">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="mobile-menu" class="md:hidden bg-sky-800 pb-4 hidden">
+          <nav class="flex flex-col space-y-2 px-4">
+            <a href="#inicio-hero" class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-slate-200 hover:text-white hover:bg-sky-700 transition-colors">Inicio</a>
+            <a href="#servicios" class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-slate-200 hover:text-white hover:bg-sky-700 transition-colors">Servicios</a>
+            <a href="#nosotros" class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-slate-200 hover:text-white hover:bg-sky-700 transition-colors">Nosotros</a>
+            <a href="#galeria" class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-slate-200 hover:text-white hover:bg-sky-700 transition-colors">Galería</a>
+            <a href="#marcas" class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-slate-200 hover:text-white hover:bg-sky-700 transition-colors">Marcas</a>
+            <a href="#testimonios" class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-slate-200 hover:text-white hover:bg-sky-700 transition-colors">Testimonios</a>
+            <a href="#promociones" class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-slate-200 hover:text-white hover:bg-sky-700 transition-colors">Promociones</a>
+            <a href="#contacto" class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-slate-200 hover:text-white hover:bg-sky-700 transition-colors">Contacto</a>
+          </nav>
+        </div>
+      </header>
+
+      <main class="flex-grow">
+        <!-- Hero Section -->
+        <section id="inicio-hero" class="hero-bg-image bg-cover bg-center bg-no-repeat text-white relative min-h-[70vh] md:min-h-screen flex items-center justify-center pt-20">
+          <div class="absolute inset-0 bg-black opacity-50"></div>
+          <div class="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center py-20 md:py-32">
+            <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 drop-shadow-lg">
+              Tu Taller Mecánico de Confianza en Monterrey
+            </h1>
+            <p class="text-lg sm:text-xl md:text-2xl mb-10 max-w-3xl mx-auto drop-shadow-md">
+              Soluciones expertas para tu vehículo. Calidad, honestidad y los mejores precios. ¡Agenda tu cita hoy!
+            </p>
+            <div class="space-x-0 space-y-4 sm:space-x-4 sm:space-y-0">
+              <a href="#servicios" class="inline-block px-8 py-3 font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out text-white bg-red-600 hover:bg-red-700 focus:ring-red-500 text-lg w-full sm:w-auto" aria-label="Ver nuestros servicios">
+                Nuestros Servicios
+              </a>
+              <a href="#contacto" class="inline-block px-8 py-3 font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out text-white bg-transparent border-2 border-white hover:bg-white hover:text-sky-700 focus:ring-white text-lg w-full sm:w-auto" aria-label="Contactar ahora">
+                Contáctanos Ahora
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="servicios" class="py-12 md:py-20 bg-slate-50">
+          <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-sky-700 mb-8 md:mb-12">Nuestros Servicios</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col items-center text-center transform hover:-translate-y-1">
+                <div class="text-5xl mb-4 text-sky-600" role="img" aria-label="Icono de Reparación de Frenos">🔧</div>
+                <h3 class="text-xl font-semibold text-sky-700 mb-2">Reparación de Frenos</h3>
+                <p class="text-slate-600 text-sm leading-relaxed">Servicio completo de frenos: pastillas, discos, líquido y más.</p>
+              </div>
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col items-center text-center transform hover:-translate-y-1">
+                <div class="text-5xl mb-4 text-sky-600" role="img" aria-label="Icono de Afinación Completa">⚙️</div>
+                <h3 class="text-xl font-semibold text-sky-700 mb-2">Afinación Completa</h3>
+                <p class="text-slate-600 text-sm leading-relaxed">Mantenimiento preventivo para optimizar el rendimiento de tu motor.</p>
+              </div>
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col items-center text-center transform hover:-translate-y-1">
+                <div class="text-5xl mb-4 text-sky-600" role="img" aria-label="Icono de Suspensión y Dirección">🔩</div>
+                <h3 class="text-xl font-semibold text-sky-700 mb-2">Suspensión y Dirección</h3>
+                <p class="text-slate-600 text-sm leading-relaxed">Reparación y ajuste de sistemas de suspensión y dirección.</p>
+              </div>
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col items-center text-center transform hover:-translate-y-1">
+                <div class="text-5xl mb-4 text-sky-600" role="img" aria-label="Icono de Diagnóstico por Computadora">💻</div>
+                <h3 class="text-xl font-semibold text-sky-700 mb-2">Diagnóstico por Computadora</h3>
+                <p class="text-slate-600 text-sm leading-relaxed">Tecnología de punta para identificar fallas precisas.</p>
+              </div>
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col items-center text-center transform hover:-translate-y-1">
+                <div class="text-5xl mb-4 text-sky-600" role="img" aria-label="Icono de Venta y Montaje de Llantas">🔘</div>
+                <h3 class="text-xl font-semibold text-sky-700 mb-2">Venta y Montaje de Llantas</h3>
+                <p class="text-slate-600 text-sm leading-relaxed">Amplia variedad de marcas y modelos. Alineación y balanceo.</p>
+              </div>
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col items-center text-center transform hover:-translate-y-1">
+                <div class="text-5xl mb-4 text-sky-600" role="img" aria-label="Icono de Sistema Eléctrico">⚡</div>
+                <h3 class="text-xl font-semibold text-sky-700 mb-2">Sistema Eléctrico</h3>
+                <p class="text-slate-600 text-sm leading-relaxed">Diagnóstico y reparación de fallas eléctricas, luces, arranque.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- About Us Section -->
+        <section id="nosotros" class="py-12 md:py-20 bg-white">
+          <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-sky-700 mb-8 md:mb-12">Sobre Nosotros</h2>
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+              <div class="space-y-6">
+                <h3 class="text-2xl font-semibold text-sky-700">Pasión por la Mecánica, Compromiso Contigo</h3>
+                <p class="text-slate-600 leading-relaxed">
+                  En Taller Mecánico ProMonterrey, llevamos más de 15 años sirviendo a la comunidad de Monterrey con servicios automotrices de primera calidad. 
+                  Somos un equipo de mecánicos apasionados y certificados, dedicados a mantener tu vehículo en las mejores condiciones.
+                </p>
+                <p class="text-slate-600 leading-relaxed">
+                  Nuestra misión es ofrecerte un servicio honesto, transparente y eficiente. Utilizamos refacciones de calidad y tecnología de diagnóstico avanzada 
+                  para asegurar reparaciones duraderas. Creemos en construir relaciones a largo plazo con nuestros clientes, basadas en la confianza y la satisfacción.
+                </p>
+                <p class="text-slate-600 leading-relaxed">
+                  Visítanos y experimenta la diferencia de un taller que realmente se preocupa por ti y tu automóvil. Ambiente tradicional, pero con la profesionalidad que esperas.
+                </p>
+                <ul class="list-disc list-inside text-slate-600 space-y-1">
+                  <li>Mecánicos certificados y con experiencia.</li>
+                  <li>Atención personalizada y presupuestos claros.</li>
+                  <li>Garantía en todos nuestros trabajos.</li>
+                  <li>Compromiso con la calidad y la honestidad.</li>
+                </ul>
+              </div>
+              <div class="mt-8 md:mt-0">
+                <img src="images/equipo-mecanicos.jpg" alt="Equipo del Taller Mecánico ProMonterrey trabajando en vehículos" class="rounded-xl shadow-xl w-full h-auto object-cover"> <!-- REEMPLAZAR IMAGEN -->
+                <p class="text-center text-sm text-slate-500 mt-2">Nuestro equipo, ¡listo para servirte!</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Gallery Section -->
+        <section id="galeria" class="py-12 md:py-20 bg-slate-50">
+          <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-sky-700 mb-8 md:mb-12">Nuestros Trabajos</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+              <div class="gallery-item relative overflow-hidden rounded-lg shadow-md cursor-pointer group">
+                <img src="images/gallery-reparacion-motor.jpg" alt="Reparación de motor compleja" class="gallery-img w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"> <!-- REEMPLAZAR IMAGEN -->
+                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-opacity duration-300 flex items-center justify-center">
+                  <p class="text-white text-lg font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">Ver Más</p>
+                </div>
+              </div>
+              <div class="gallery-item relative overflow-hidden rounded-lg shadow-md cursor-pointer group">
+                <img src="images/gallery-servicio-frenos.jpg" alt="Servicio de frenos profesional" class="gallery-img w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"> <!-- REEMPLAZAR IMAGEN -->
+                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-opacity duration-300 flex items-center justify-center">
+                  <p class="text-white text-lg font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">Ver Más</p>
+                </div>
+              </div>
+              <div class="gallery-item relative overflow-hidden rounded-lg shadow-md cursor-pointer group">
+                <img src="images/gallery-diagnostico.jpg" alt="Mecánico realizando diagnóstico computarizado" class="gallery-img w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"> <!-- REEMPLAZAR IMAGEN -->
+                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-opacity duration-300 flex items-center justify-center">
+                  <p class="text-white text-lg font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">Ver Más</p>
+                </div>
+              </div>
+              <div class="gallery-item relative overflow-hidden rounded-lg shadow-md cursor-pointer group">
+                <img src="images/gallery-cliente-satisfecho.jpg" alt="Cliente satisfecho recogiendo su auto" class="gallery-img w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"> <!-- REEMPLAZAR IMAGEN -->
+                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-opacity duration-300 flex items-center justify-center">
+                  <p class="text-white text-lg font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">Ver Más</p>
+                </div>
+              </div>
+              <div class="gallery-item relative overflow-hidden rounded-lg shadow-md cursor-pointer group">
+                <img src="images/gallery-taller-limpio.jpg" alt="Instalaciones del taller mecánico" class="gallery-img w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"> <!-- REEMPLAZAR IMAGEN -->
+                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-opacity duration-300 flex items-center justify-center">
+                  <p class="text-white text-lg font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">Ver Más</p>
+                </div>
+              </div>
+              <div class="gallery-item relative overflow-hidden rounded-lg shadow-md cursor-pointer group">
+                <img src="images/gallery-cambio-llantas.jpg" alt="Proceso de cambio de llantas" class="gallery-img w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"> <!-- REEMPLAZAR IMAGEN -->
+                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-opacity duration-300 flex items-center justify-center">
+                  <p class="text-white text-lg font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">Ver Más</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- Lightbox Structure -->
+        <div id="lightbox">
+          <button id="lightbox-close" class="bg-red-600 text-white p-2.5 rounded-full hover:bg-red-700 transition-colors z-10" aria-label="Cerrar vista ampliada">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-6 w-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+          </button>
+          <img id="lightbox-image" src="" alt="Vista ampliada de trabajo realizado">
+        </div>
+
+
+        <!-- Brands Section -->
+        <section id="marcas" class="py-12 md:py-20 bg-white">
+          <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-sky-700 mb-8 md:mb-12">Marcas con las que Trabajamos</h2>
+            <p class="text-center text-slate-600 mb-10 max-w-xl mx-auto">
+              Contamos con la experiencia y el equipo para trabajar con una amplia gama de marcas y modelos, tanto nacionales como importados.
+            </p>
+            <div class="flex flex-wrap justify-center items-center gap-8 md:gap-12">
+              <div class="p-4" title="Toyota"><img src="logos/toyota.png" alt="Logo Toyota" class="h-10 md:h-12 opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300"></div>
+              <div class="p-4" title="Ford"><img src="logos/ford.png" alt="Logo Ford" class="h-10 md:h-12 opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300"></div>
+              <div class="p-4" title="Chevrolet"><img src="logos/chevrolet.png" alt="Logo Chevrolet" class="h-10 md:h-12 opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300"></div>
+              <div class="p-4" title="Honda"><img src="logos/honda.png" alt="Logo Honda" class="h-10 md:h-12 opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300"></div>
+              <div class="p-4" title="Nissan"><img src="logos/nissan.png" alt="Logo Nissan" class="h-10 md:h-12 opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300"></div>
+              <div class="p-4" title="Volkswagen"><img src="logos/volkswagen.png" alt="Logo Volkswagen" class="h-10 md:h-12 opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300"></div>
+              <div class="p-4" title="BMW"><img src="logos/bmw.png" alt="Logo BMW" class="h-10 md:h-12 opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300"></div>
+              <div class="p-4" title="Mercedes-Benz"><img src="logos/mercedes.png" alt="Logo Mercedes-Benz" class="h-10 md:h-12 opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section id="testimonios" class="py-12 md:py-20 bg-sky-50">
+          <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-sky-700 mb-8 md:mb-12">Lo que Dicen Nuestros Clientes</h2>
+            <div class="relative max-w-3xl mx-auto bg-white p-8 md:p-12 rounded-xl shadow-xl overflow-hidden">
+              <div id="testimonial-container" class="transition-opacity duration-500 ease-in-out">
+                <!-- Testimonial items will be injected here by JS -->
+              </div>
+              
+              <button id="prev-testimonial" class="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-sky-600 text-white p-2 rounded-full hover:bg-sky-700 transition-colors focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2" aria-label="Testimonio anterior">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                </svg>
+              </button>
+              <button id="next-testimonial" class="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-sky-600 text-white p-2 rounded-full hover:bg-sky-700 transition-colors focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2" aria-label="Siguiente testimonio">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                </svg>
+              </button>
+              <div id="testimonial-dots" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
+                  <!-- Dots will be injected here by JS -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Promotions Section -->
+        <section id="promociones" class="py-12 md:py-20 bg-white">
+          <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-sky-700 mb-8 md:mb-12">Promociones Especiales</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div class="rounded-xl shadow-lg overflow-hidden flex flex-col transition-all duration-300 hover:shadow-2xl border-2 border-red-500 transform hover:scale-105">
+                <img src="images/promo-cambio-aceite.jpg" alt="Cambio de Aceite + Filtro" class="w-full h-48 object-cover"> <!-- REEMPLAZAR IMAGEN -->
+                <div class="p-6 flex flex-col flex-grow">
+                  <h3 class="text-xl font-bold mb-2 text-red-600">Cambio de Aceite + Filtro</h3>
+                  <p class="text-2xl font-bold text-slate-800 mb-3">$899 MXN*</p>
+                  <p class="text-slate-600 text-sm mb-4 flex-grow">Incluye aceite multigrado, filtro de aceite y revisión de niveles. *Aplican restricciones.</p>
+                  <a href="#contacto" class="block text-center px-6 py-3 font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out text-white bg-red-600 hover:bg-red-700 focus:ring-red-500 w-full mt-auto" aria-label="Consultar sobre Cambio de Aceite">
+                    Consultar Ahora
+                  </a>
+                </div>
+              </div>
+              <div class="rounded-xl shadow-lg overflow-hidden flex flex-col transition-all duration-300 hover:shadow-2xl border border-slate-200">
+                <img src="images/promo-revision-frenos.jpg" alt="Revisión de Frenos GRATIS" class="w-full h-48 object-cover"> <!-- REEMPLAZAR IMAGEN -->
+                <div class="p-6 flex flex-col flex-grow">
+                  <h3 class="text-xl font-bold mb-2 text-sky-700">Revisión de Frenos GRATIS</h3>
+                  <p class="text-2xl font-bold text-slate-800 mb-3">¡Sin Costo!</p>
+                  <p class="text-slate-600 text-sm mb-4 flex-grow">Diagnóstico completo de tu sistema de frenos. Válido este mes.</p>
+                  <a href="#contacto" class="block text-center px-6 py-3 font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out text-white bg-sky-600 hover:bg-sky-700 focus:ring-sky-500 w-full mt-auto" aria-label="Consultar sobre Revisión de Frenos">
+                    Consultar Ahora
+                  </a>
+                </div>
+              </div>
+              <div class="rounded-xl shadow-lg overflow-hidden flex flex-col transition-all duration-300 hover:shadow-2xl border border-slate-200">
+                <img src="images/promo-afinacion-mayor.jpg" alt="Paquete de Afinación Mayor" class="w-full h-48 object-cover"> <!-- REEMPLAZAR IMAGEN -->
+                <div class="p-6 flex flex-col flex-grow">
+                  <h3 class="text-xl font-bold mb-2 text-sky-700">Paquete de Afinación Mayor</h3>
+                  <p class="text-2xl font-bold text-slate-800 mb-3">Desde $1,599 MXN*</p>
+                  <p class="text-slate-600 text-sm mb-4 flex-grow">Incluye cambio de bujías, filtros, limpieza de inyectores y más. *Consulta modelos participantes.</p>
+                   <a href="#contacto" class="block text-center px-6 py-3 font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out text-white bg-sky-600 hover:bg-sky-700 focus:ring-sky-500 w-full mt-auto" aria-label="Consultar sobre Afinación Mayor">
+                    Consultar Ahora
+                  </a>
+                </div>
+              </div>
+            </div>
+            <p class="text-center text-sm text-slate-500 mt-8">* Todas las promociones están sujetas a disponibilidad y pueden cambiar sin previo aviso. Consulta términos y condiciones en el taller.</p>
+          </div>
+        </section>
+
+        <!-- Contact Us Section -->
+        <section id="contacto" class="py-12 md:py-20 bg-slate-50">
+          <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-sky-700 mb-8 md:mb-12">Contáctanos</h2>
+            <div class="grid md:grid-cols-2 gap-12">
+              <div>
+                <h3 class="text-2xl font-semibold text-sky-700 mb-2">Envíanos un Mensaje</h3>
+                <p class="text-slate-600 mb-6">
+                  ¿Tienes alguna pregunta o quieres agendar una cita? Completa el formulario y te responderemos a la brevedad.
+                </p>
+                <form id="contact-form" class="space-y-5 bg-white p-6 sm:p-8 rounded-xl shadow-lg">
+                  <div>
+                    <label for="name" class="block text-sm font-medium text-slate-700 mb-1">Nombre Completo *</label>
+                    <input type="text" id="name" name="name" placeholder="Ej: Juan Pérez" required class="w-full px-4 py-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition duration-150 ease-in-out text-slate-800 placeholder-slate-400 bg-white">
+                  </div>
+                  <div>
+                    <label for="email" class="block text-sm font-medium text-slate-700 mb-1">Correo Electrónico *</label>
+                    <input type="email" id="email" name="email" placeholder="Ej: juan.perez@correo.com" required class="w-full px-4 py-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition duration-150 ease-in-out text-slate-800 placeholder-slate-400 bg-white">
+                  </div>
+                  <div>
+                    <label for="phone" class="block text-sm font-medium text-slate-700 mb-1">Teléfono (Opcional)</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Ej: 81 1234 5678" class="w-full px-4 py-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition duration-150 ease-in-out text-slate-800 placeholder-slate-400 bg-white">
+                  </div>
+                  <div>
+                    <label for="subject" class="block text-sm font-medium text-slate-700 mb-1">Asunto *</label>
+                    <input type="text" id="subject" name="subject" placeholder="Ej: Cotización para afinación" required class="w-full px-4 py-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition duration-150 ease-in-out text-slate-800 placeholder-slate-400 bg-white">
+                  </div>
+                  <div>
+                    <label for="message" class="block text-sm font-medium text-slate-700 mb-1">Mensaje *</label>
+                    <textarea id="message" name="message" rows="4" placeholder="Describe tu consulta o el servicio que necesitas..." required class="w-full px-4 py-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition duration-150 ease-in-out text-slate-700 placeholder-slate-400"></textarea>
+                  </div>
+                  <!-- Campo para subir imágenes -->
+                  <div>
+                    <label for="image" class="block text-sm font-medium text-slate-700 mb-1">Imagen (Opcional)</label>
+                    <div class="flex items-center space-x-2">
+                      <label for="image" class="cursor-pointer flex-grow">
+                        <div class="w-full px-4 py-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition duration-150 ease-in-out text-slate-800 placeholder-slate-400 bg-white flex items-center justify-between">
+                          <span id="image-name" class="truncate">Ningún archivo seleccionado</span>
+                          <span class="bg-sky-100 text-sky-700 px-3 py-1 rounded-md text-sm font-medium">Seleccionar</span>
+                        </div>
+                      </label>
+                      <button type="button" id="camera-button" class="p-3 bg-sky-600 text-white rounded-lg hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 transition-colors" aria-label="Tomar foto">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
+                        </svg>
+                      </button>
+                    </div>
+                    <input type="file" id="image" name="image" accept="image/*" class="hidden" capture="environment">
+                    <p class="text-xs text-slate-500 mt-1">Puedes subir una imagen de la falla mecánica (máx. 5MB)</p>
+                    <div id="image-preview" class="hidden mt-2 relative">
+                      <img src="" alt="Vista previa" class="w-full h-auto max-h-48 object-contain rounded-lg border border-slate-300">
+                      <button type="button" id="remove-image" class="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <button type="submit" id="submit-contact-form" class="w-full px-6 py-3 font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out text-white bg-sky-600 hover:bg-sky-700 focus:ring-sky-500 disabled:opacity-50 disabled:cursor-not-allowed">
+                      Enviar Mensaje
+                    </button>
+                  </div>
+                  <div id="form-status" class="text-sm mt-4 p-3 rounded-md hidden"></div>
+                </form>
+              </div>
+              <div>
+                <h3 class="text-2xl font-semibold text-sky-700 mb-2">Visítanos</h3>
+                <p class="text-slate-600 mb-6">
+                  Encuéntranos en nuestra ubicación en Monterrey. ¡Te esperamos!
+                </p>
+                <div class="space-y-4">
+                  <div class="aspect-w-16 aspect-h-9 rounded-xl overflow-hidden shadow-lg">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d230048.0158089657!2d-100.47799246796066!3d25.67569978346852!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8662953140b23e87%3A0x7ff558da45542795!2sMonterrey%2C%20N.L.!5e0!3m2!1ses-419!2smx!4v1678886400000!5m2!1ses-419!2smx" width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Ubicación del Taller Mecánico ProMonterrey"></iframe>
+                  </div>
+                  <div class="text-slate-600">
+                    <p class="font-semibold text-sky-700">Dirección:</p>
+                    <p>Av. Principal 123, Col. Centro</p>
+                    <p>Monterrey, Nuevo León, México. C.P. 64000</p>
+                    <p class="mt-2">
+                        <a href="https://maps.google.com/?q=Av.+Principal+123,+Col.+Centro,+Monterrey,+Nuevo+León,+México,+C.P.+64000" target="_blank" rel="noopener noreferrer" class="text-sky-600 hover:text-red-600 font-medium transition-colors">
+                            Obtener direcciones en Google Maps &rarr;
+                        </a>
+                    </p>
+                  </div>
+                </div>
+                <div class="mt-6 bg-white p-6 rounded-lg shadow">
+                  <h4 class="text-lg font-semibold text-sky-700 mb-2">Horario de Atención:</h4>
+                  <ul class="text-slate-600 space-y-1">
+                    <li>Lunes a Viernes: 9:00 AM - 6:00 PM</li>
+                    <li>Sábados: 9:00 AM - 2:00 PM</li>
+                    <li>Domingos: Cerrado</li>
+                  </ul>
+                  <p class="mt-4 text-slate-600">
+                    <strong class="text-sky-700">Teléfono:</strong> <a href="tel:+528112345678" class="hover:text-red-600 transition-colors">(81) 1234-5678</a><br />
+                    <strong class="text-sky-700">Email:</strong> <a href="mailto:contacto@promonterrey.mx" class="hover:text-red-600 transition-colors">contacto@promonterrey.mx</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Footer -->
+      <footer class="bg-slate-800 text-slate-300 pt-12 pb-8">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-8">
+            <div class="lg:col-span-1">
+              <a href="#inicio-hero" class="flex items-center space-x-2 text-xl font-bold text-white mb-3">
+                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-7 w-7 text-red-500">
+                  <title>Servicios Mecánicos ProMonterrey</title>
+                  <path d="M12.525 10.705L9.293 7.473a1.25 1.25 0 00-1.768 0L6.101 8.897a1.25 1.25 0 000 1.768l3.232 3.232-4.038 4.038a3.752 3.752 0 000 5.304 3.752 3.752 0 005.304 0l4.038-4.038 3.232 3.232a1.25 1.25 0 001.768 0l1.424-1.424a1.25 1.25 0 000-1.768l-3.232-3.232 4.366-4.366a.75.75 0 00-1.06-1.06l-4.367 4.366-1.5-1.5z"/>
+                  <path d="M13.232 3.232a3.752 3.752 0 00-5.304 0L4.038 7.122a.75.75 0 001.061 1.06L8.8 4.293a2.25 2.25 0 013.182 0l1.768 1.768a2.25 2.25 0 010 3.182L9.859 13.135a.75.75 0 001.06 1.06l3.891-3.891a3.752 3.752 0 000-5.304L13.232 3.232z"/>
+                </svg>
+                <span>ProMonterrey</span>
+              </a>
+              <p class="text-sm text-slate-400">
+                Tu taller mecánico de confianza en Monterrey. Calidad y servicio profesional para tu vehículo.
+              </p>
+            </div>
+            <div>
+              <h5 class="text-lg font-semibold text-white mb-3">Enlaces Rápidos</h5>
+              <ul class="space-y-2 text-sm">
+                <li><a href="#servicios" class="hover:text-sky-400 transition-colors nav-link">Servicios</a></li>
+                <li><a href="#nosotros" class="hover:text-sky-400 transition-colors nav-link">Nosotros</a></li>
+                <li><a href="#promociones" class="hover:text-sky-400 transition-colors nav-link">Promociones</a></li>
+                <li><a href="#contacto" class="hover:text-sky-400 transition-colors nav-link">Contacto</a></li>
+              </ul>
+            </div>
+            <div>
+              <h5 class="text-lg font-semibold text-white mb-3">Contacto</h5>
+              <address class="text-sm not-italic space-y-2">
+                <p>Av. Principal 123, Col. Centro</p>
+                <p>Monterrey, N.L., México</p>
+                <p>Tel: <a href="tel:+528112345678" class="hover:text-sky-400 transition-colors">(81) 1234-5678</a></p>
+                <p>Email: <a href="mailto:contacto@promonterrey.mx" class="hover:text-sky-400 transition-colors">contacto@promonterrey.mx</a></p>
+              </address>
+            </div>
+            <div>
+               <h5 class="text-lg font-semibold text-white mb-3">Síguenos</h5>
+               <div class="flex space-x-4">
+                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="text-slate-400 hover:text-sky-400 transition-colors">
+                  <svg fill="currentColor" viewBox="0 0 24 24" class="h-6 w-6"><path d="M12 2.04C6.5 2.04 2 6.53 2 12.06c0 5.52 4.5 10.02 10 10.02s10-4.5 10-10.02C22 6.53 17.5 2.04 12 2.04zM15.6 12.82h-2.3v6.95h-2.97v-6.95H8.5v-2.67h1.83V8.41c0-1.51.75-2.39 2.53-2.39h1.98v2.64h-1.3c-.47 0-.57.22-.57.58v1.41h1.9L15.6 12.82z" /></svg>
+                </a>
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="text-slate-400 hover:text-sky-400 transition-colors">
+                  <svg fill="currentColor" viewBox="0 0 24 24" class="h-6 w-6"><path d="M12 2c2.72 0 3.05.01 4.12.06 1.06.05 1.79.24 2.42.51.65.28 1.17.62 1.69 1.15.52.52.87 1.04 1.15 1.69.27.63.46 1.36.51 2.42.05 1.07.06 1.4.06 4.12s-.01 3.05-.06 4.12c-.05 1.06-.24 1.79-.51 2.42-.28.65-.62 1.17-1.15 1.69-.52.52-1.04.87-1.69 1.15-.63.27-1.36.46-2.42.51-1.07.05-1.4.06-4.12.06s-3.05-.01-4.12-.06c-1.06-.05-1.79-.24-2.42-.51-.65-.28-1.17-.62-1.69-1.15-.52-.52-.87-1.04-1.15-1.69-.27-.63-.46-1.36-.51-2.42-.05-1.07-.06-1.4-.06-4.12s.01-3.05.06-4.12c.05-1.06.24-1.79.51-2.42.28-.65.62-1.17 1.15-1.69.52-.52 1.04.87 1.69-1.15.63-.27 1.36.46 2.42.51C8.95 2.01 9.28 2 12 2zm0 1.8c-2.67 0-2.98.01-4.04.06-1,.04-1.58.22-2.02.4-.5.22-.87.5-1.22.87s-.65.72-.87 1.22c-.18.44-.36 1.02-.4 2.02-.05 1.06-.06 1.37-.06 4.04s.01 2.98.06 4.04c.04 1 .22 1.58.4 2.02.22.5.5.87.87 1.22s.72.65 1.22.87c.44.18 1.02.36 2.02.4 1.06.05 1.37.06 4.04.06s2.98-.01 4.04-.06c1-.04 1.58-.22 2.02-.4.5-.22.87-.5 1.22-.87s.65-.72.87-1.22c.18-.44.36-1.02.4-2.02.05-1.06.06-1.37.06-4.04s-.01-2.98-.06-4.04c-.04-1-.22-1.58-.4-2.02-.22-.5-.5-.87-.87-1.22s-.72-.65-1.22-.87c-.44-.18-1.02-.36-2.02-.4C14.98 3.81 14.67 3.8 12 3.8zm0 4.47c-2.04 0-3.69 1.65-3.69 3.69s1.65 3.69 3.69 3.69 3.69-1.65 3.69-3.69-1.65-3.69-3.69-3.69zm0 5.94c-1.24 0-2.25-1.01-2.25-2.25s1.01-2.25 2.25-2.25 2.25 1.01 2.25 2.25-1.01 2.25-2.25 2.25zm3.02-5.79c0 .52-.42.94-.94.94s-.94-.42-.94-.94.42-.94.94-.94.94.42.94.94z"/></svg>
+                </a>
+                <a href="https://wa.me/5218112345678" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="text-slate-400 hover:text-sky-400 transition-colors">
+                  <svg fill="currentColor" viewBox="0 0 24 24" class="h-6 w-6"><path d="M12.04 2C6.58 2 2.13 6.44 2.13 11.9c0 1.79.49 3.48 1.37 4.95L2 22l5.25-1.46c1.41.81 3.02 1.28 4.79 1.28h.01c5.46 0 9.9-4.44 9.9-9.9S17.5 2 12.04 2zm0 1.81c4.53 0 8.2 3.65 8.2 8.18s-3.68 8.18-8.2 8.18c-1.6 0-3.1-.46-4.38-1.25L5.09 19.9l.88-2.47c-.85-1.34-1.34-2.9-1.34-4.54 0-4.53 3.67-8.18 8.18-8.18l.03-.01zM9.38 7.73c-.22-.47-.45-.49-.67-.49-.19 0-.41.03-.62.03-.24 0-.6.11-.92.52-.32.42-.96.96-1.16 2.11-.2 1.15.28 2.45.65 3.28.37.83 1.25 2.11 2.87 3.59 1.97 1.79 3.33 2.29 4.56 2.71.38.13.96.25 1.41.19.5-.06 1.16-.41 1.48-1.09.32-.68.32-1.25.22-1.41-.1-.16-.35-.25-.73-.44-.37-.19-.87-.44-1.03-.49-.16-.06-.35-.03-.49.16-.14.19-.41.49-.52.62-.11.13-.22.16-.41.06-.19-.1-.82-.32-1.58-1.01-.6-.55-.99-1.19-1.13-1.41-.13-.22-.03-.38.13-.52.14-.11.32-.32.44-.47.11-.13.16-.25.25-.44.09-.19.03-.38-.06-.52-.09-.14-.87-2.09-1.19-2.85z"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="border-t border-slate-700 pt-8 text-center text-sm text-slate-400">
+            <p>&copy; <span id="current-year"></span> Taller Mecánico ProMonterrey. Todos los derechos reservados.</p>
+            <p>Diseñado con <span role="img" aria-label="corazón" class="text-red-500">❤️</span> por tu equipo de desarrollo.</p>
+          </div>
+        </div>
+      </footer>
+
+      <!-- Scroll to Top Button -->
+      <button id="scroll-to-top" class="hidden fixed bottom-6 right-6 bg-red-600 hover:bg-red-700 text-white p-3 rounded-full shadow-lg scroll-to-top-transition focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 z-50" aria-label="Volver arriba">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+        </svg>
+      </button>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html><link rel="stylesheet" href="index.css">
+<script src="index.tsx" type="module"></script>
