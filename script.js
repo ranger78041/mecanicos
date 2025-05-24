@@ -453,84 +453,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const aiPossibleCausesList = document.getElementById('ai-possible-causes');
   const aiUrgencyLevel = document.getElementById('ai-urgency-level');
   const aiRecommendation = document.getElementById('ai-recommendation');
+  const aiNotesContainer = document.getElementById('ai-notes-container');
+  const aiNotes = document.getElementById('ai-notes');
 
-  // Mock AI Service Function
-  function getMockAIDiagnosis(problemDescription) {
-    return new Promise((resolve, reject) => {
-      // Simulate API call delay
-      setTimeout(() => {
-        console.log(`Sending to mock AI: "${problemDescription}"`);
-        // Basic validation for demonstration
-        if (!problemDescription || problemDescription.trim().length < 10) {
-          reject({
-            status: 'error',
-            message: 'Por favor, describe el problema con más detalle (mínimo 10 caracteres).'
-          });
-          return;
-        }
+  // Mock AI Service Function (REMOVED - Now using fetch to gemini_proxy.php)
+  // function getMockAIDiagnosis(problemDescription) { ... } 
 
-        // Simulate different responses based on keywords (very basic)
-        if (problemDescription.toLowerCase().includes('no enciende')) {
-          resolve({
-            status: 'success',
-            data: {
-              possibleCauses: [
-                'Batería descargada o defectuosa.',
-                'Problema con el motor de arranque (starter).',
-                'Falla en el alternador (si el auto se detuvo mientras conducías).',
-                'Sistema de combustible obstruido o bomba de combustible defectuosa.'
-              ],
-              urgency: 'Alta',
-              recommendation: 'Este problema requiere atención inmediata. Intenta pasar corriente a la batería si es posible, pero si persiste, es crucial no intentar encender el motor repetidamente y llamar a un mecánico. Podrías quedar varado.'
-            }
-          });
-        } else if (problemDescription.toLowerCase().includes('ruido') && problemDescription.toLowerCase().includes('frenos')) {
-          resolve({
-            status: 'success',
-            data: {
-              possibleCauses: [
-                'Pastillas de freno desgastadas.',
-                'Discos de freno rayados o dañados.',
-                'Calipers de freno atascados o defectuosos.',
-                'Bajo nivel de líquido de frenos (podría indicar una fuga).'
-              ],
-              urgency: 'Media a Alta',
-              recommendation: 'Se recomienda una inspección de frenos lo antes posible. Los problemas de frenos pueden comprometer seriamente tu seguridad. Evita conducir si el ruido es muy fuerte o si notas una disminución en la capacidad de frenado.'
-            }
-          });
-        } else if (problemDescription.toLowerCase().includes('humo')) {
-             resolve({
-                status: 'success',
-                data: {
-                    possibleCauses: [
-                        'Quema de aceite (sellos de válvula o anillos de pistón desgastados - humo azulado).',
-                        'Quema de refrigerante (junta de culata dañada - humo blanco y dulce).',
-                        'Problema con el sistema de combustible (mezcla rica - humo negro).',
-                        'Sobrecalentamiento del motor.'
-                    ],
-                    urgency: 'Alta',
-                    recommendation: 'El humo del escape o del motor es una señal de advertencia importante. Detén el vehículo de forma segura y apaga el motor lo antes posible para evitar daños mayores. Requiere diagnóstico profesional urgente.'
-                }
-            });
-        } else {
-          resolve({
-            status: 'success',
-            data: {
-              possibleCauses: [
-                'Inspección visual del área afectada (si es seguro hacerlo).',
-                'Verificación de niveles de fluidos (aceite, refrigerante, etc.).',
-                'Considerar si el problema es intermitente o constante.'
-              ],
-              urgency: 'Variable',
-              recommendation: 'La información proporcionada es general. Para un diagnóstico preciso, por favor, proporciona más detalles o consulta con un mecánico calificado. Recuerda que esta IA solo ofrece sugerencias basadas en la descripción.'
-            }
-          });
-        }
-      }, 1500); // Simulate 1.5 seconds delay
-    });
-  }
-
-  if (aiSubmitButton && aiProblemDescription && aiLoadingSpinner && aiResponseArea && aiPossibleCausesList && aiUrgencyLevel && aiRecommendation) {
+  if (aiSubmitButton && aiProblemDescription && aiLoadingSpinner && aiResponseArea && aiPossibleCausesList && aiUrgencyLevel && aiRecommendation && aiNotesContainer && aiNotes) {
     aiSubmitButton.addEventListener('click', async () => {
       const problem = aiProblemDescription.value;
 
@@ -559,48 +488,113 @@ document.addEventListener('DOMContentLoaded', () => {
       aiResponseArea.classList.remove('bg-red-100', 'text-red-700', 'border', 'border-red-300');
 
 
+      // This code replaces the call to getMockAIDiagnosis and its specific error handling.
+      // It should be placed after basic client-side validation of the 'problem' variable.
+
       aiLoadingSpinner.classList.remove('hidden');
+      // Ensure previous error/success styling is managed correctly
+      aiResponseArea.classList.add('hidden'); // Hide previous results first
+      aiPossibleCausesList.innerHTML = '';    // Clear old results
+      aiUrgencyLevel.textContent = '';
+      aiRecommendation.textContent = '';
+      aiResponseArea.classList.add('bg-slate-50'); // Default background
+      aiResponseArea.classList.remove('bg-red-100', 'text-red-700', 'border', 'border-red-300'); // Remove error styling
 
       try {
-        const response = await getMockAIDiagnosis(problem);
-        
-        if (response.status === 'success') {
-          const { possibleCauses, urgency, recommendation } = response.data;
-          
-          if (possibleCauses && possibleCauses.length > 0) {
-            possibleCauses.forEach(cause => {
-              const li = document.createElement('li');
-              li.textContent = cause;
-              aiPossibleCausesList.appendChild(li);
-            });
-          } else {
-            const li = document.createElement('li');
-            li.textContent = 'No se identificaron causas específicas con la información proporcionada.';
-            aiPossibleCausesList.appendChild(li);
-          }
+        const formData = new FormData();
+        formData.append('problem_description', problem);
 
-          aiUrgencyLevel.textContent = urgency || 'No especificado';
-          aiRecommendation.textContent = recommendation || 'No hay recomendaciones adicionales.';
-          
-          aiResponseArea.classList.remove('hidden');
-        } else {
-          // Handle errors reported by the mock service (e.g., validation errors)
-          aiPossibleCausesList.innerHTML = ''; // Clear any previous list items
-          aiUrgencyLevel.textContent = 'Error en el Diagnóstico';
-          aiRecommendation.textContent = response.message || 'Un error desconocido ocurrió.';
-          aiResponseArea.classList.remove('hidden');
-          aiResponseArea.classList.remove('bg-slate-50');
-          aiResponseArea.classList.add('bg-red-100', 'text-red-700', 'border', 'border-red-300'); // Error styling
+        const fetchResponse = await fetch('gemini_proxy.php', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!fetchResponse.ok) {
+          // Network error or non-200 response from PHP script itself (e.g., PHP fatal error before JSON response)
+          let errorMsg = `Error conectando con el servicio de diagnóstico. Estado: ${fetchResponse.status}`;
+          try {
+            // Try to get more details if the server sent any text (e.g. PHP error output)
+            const textError = await fetchResponse.text();
+            errorMsg += ` - ${textError.substring(0, 200)}`; // Limit length
+          } catch (e) { /* ignore if can't get text */ }
+          throw new Error(errorMsg);
         }
+
+        const responseData = await fetchResponse.json(); // Expect JSON from gemini_proxy.php
+
+        if (responseData.status === 'success' && responseData.data) {
+          const { possibleCauses, urgency, recommendation, notes, error: aiError } = responseData.data;
+
+          // Clear previous results before populating new ones
+          aiPossibleCausesList.innerHTML = '';
+          aiUrgencyLevel.textContent = '';
+          aiRecommendation.textContent = '';
+          if (aiNotes) aiNotes.textContent = '';
+          if (aiNotesContainer) aiNotesContainer.classList.add('hidden');
+
+          if (aiError) {
+            // If the AI returns a specific error (e.g., not an automotive problem)
+            const li = document.createElement('li');
+            li.textContent = aiError;
+            li.style.color = 'red'; // Or apply a Tailwind class for error text
+            aiPossibleCausesList.appendChild(li);
+            // Optionally hide urgency, recommendation if only an error is shown
+            // document.getElementById('ai-urgency-level').parentElement.classList.add('hidden'); // Example
+            // document.getElementById('ai-recommendation').parentElement.classList.add('hidden'); // Example
+          } else {
+            // Normal processing if no specific AI error
+            if (possibleCauses && Array.isArray(possibleCauses) && possibleCauses.length > 0) {
+              possibleCauses.forEach(cause => {
+                const li = document.createElement('li');
+                li.textContent = cause;
+                aiPossibleCausesList.appendChild(li);
+              });
+            } else {
+              const li = document.createElement('li');
+              li.textContent = 'No se identificaron causas específicas con la información proporcionada por la IA.';
+              aiPossibleCausesList.appendChild(li);
+            }
+
+            aiUrgencyLevel.textContent = urgency || 'No especificado por la IA';
+            aiRecommendation.textContent = recommendation || 'No hay recomendaciones adicionales de la IA.';
+
+            if (aiNotes && aiNotesContainer) { // Check if elements exist
+              if (notes && notes.trim() !== "") {
+                aiNotes.textContent = notes;
+                aiNotesContainer.classList.remove('hidden');
+              } else {
+                // Ensure it's hidden if no notes
+                aiNotesContainer.classList.add('hidden');
+              }
+            }
+          }
+          aiResponseArea.classList.remove('hidden'); // Show results / successfully handled non-JSON text
+        } else if (responseData.status === 'success_text' && responseData.raw_ai_text) {
+          // AI returned plain text, not the expected JSON (gemini_proxy.php wrapped it)
+           const li = document.createElement('li');
+           li.textContent = "Respuesta de la IA (texto plano):";
+           aiPossibleCausesList.appendChild(li);
+
+          aiUrgencyLevel.textContent = 'Respuesta no estructurada';
+          aiRecommendation.textContent = responseData.raw_ai_text;
+          
+        } else if (responseData.status === 'error' && responseData.message) {
+          // Error explicitly reported by gemini_proxy.php (e.g., API key issue, Gemini error)
+          throw new Error(responseData.message);
+        } else {
+          // Any other unexpected JSON structure from gemini_proxy.php
+          throw new Error('Respuesta inesperada del servicio de diagnóstico.');
+        }
+        aiResponseArea.classList.remove('hidden'); // Show results / successfully handled non-JSON text
+
       } catch (error) {
-        // Handle network-like errors or exceptions from the mock service
         console.error("Error en el diagnóstico IA:", error);
-        aiPossibleCausesList.innerHTML = '';
-        aiUrgencyLevel.textContent = 'Error Crítico';
+        aiUrgencyLevel.textContent = 'Error en Diagnóstico';
         aiRecommendation.textContent = error.message || 'No se pudo obtener un diagnóstico. Intenta de nuevo más tarde.';
-        aiResponseArea.classList.remove('hidden');
+        // Apply error styling to the response area
         aiResponseArea.classList.remove('bg-slate-50');
-        aiResponseArea.classList.add('bg-red-100', 'text-red-700', 'border', 'border-red-300'); // Error styling
+        aiResponseArea.classList.add('bg-red-100', 'text-red-700', 'border', 'border-red-300');
+        aiResponseArea.classList.remove('hidden'); // Ensure error message is visible
       } finally {
         aiLoadingSpinner.classList.add('hidden');
         aiSubmitButton.disabled = false; // Re-enable button
