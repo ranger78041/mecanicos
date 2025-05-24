@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
   <head>
@@ -75,6 +74,81 @@
       .scroll-to-top-transition {
          transition: opacity 0.3s ease-in-out;
       }
+      /* Estilos para el asistente virtual */
+    #mechanic-assistant {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 350px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      z-index: 1000;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-header {
+      background: #1e40af;
+      color: white;
+      padding: 15px;
+      font-weight: bold;
+    }
+
+    #chat-container {
+      height: 300px;
+      overflow-y: auto;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .chat-bubble {
+      max-width: 80%;
+      padding: 10px 15px;
+      border-radius: 15px;
+      margin: 5px 0;
+      white-space: pre-line;
+    }
+
+    .chat-bubble.user {
+      background: #e2e8f0;
+      align-self: flex-end;
+    }
+
+    .chat-bubble.assistant {
+      background: #dbeafe;
+      align-self: flex-start;
+    }
+
+    .chat-input {
+      display: flex;
+      padding: 10px;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    #message-input {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      margin-right: 10px;
+    }
+
+    #send-button {
+      background: #1e40af;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    #send-button:hover {
+      background: #1e3a8a;
+    }
     </style>
 </head>
   <body class="bg-slate-100 text-slate-800 antialiased">
@@ -307,7 +381,7 @@
               <div id="testimonial-container" class="transition-opacity duration-500 ease-in-out">
                 <!-- Testimonial items will be injected here by JS -->
               </div>
-              
+
               <button id="prev-testimonial" class="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-sky-600 text-white p-2 rounded-full hover:bg-sky-700 transition-colors focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2" aria-label="Testimonio anterior">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
@@ -536,9 +610,75 @@
           <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
         </svg>
       </button>
+      <!-- Chat Assistant -->
+      <div id="mechanic-assistant">
+        <div class="chat-header">
+          Asistente Virtual
+        </div>
+        <div id="chat-container">
+        </div>
+        <div class="chat-input">
+          <input type="text" id="message-input" placeholder="Escribe tu pregunta...">
+          <button id="send-button">Enviar</button>
+        </div>
+      </div>
     </div>
 
     <script src="script.js"></script>
   </body>
 </html><link rel="stylesheet" href="index.css">
 <script src="index.tsx" type="module"></script>
+<script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const chatContainer = document.getElementById('chat-container');
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
+
+        function addMessage(message, sender) {
+          const bubble = document.createElement('div');
+          bubble.classList.add('chat-bubble', sender);
+          bubble.textContent = message;
+          chatContainer.appendChild(bubble);
+          chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll to bottom
+        }
+
+        sendButton.addEventListener('click', function() {
+          const messageText = messageInput.value.trim();
+          if (messageText !== '') {
+            addMessage(messageText, 'user');
+            messageInput.value = '';
+
+            // Simulate assistant response
+            setTimeout(function() {
+              const assistantResponse = getAssistantResponse(messageText);
+              addMessage(assistantResponse, 'assistant');
+            }, 500);
+          }
+        });
+
+        messageInput.addEventListener('keypress', function(event) {
+          if (event.key === 'Enter') {
+            sendButton.click();
+            event.preventDefault(); // Prevent form submission
+          }
+        });
+
+        function getAssistantResponse(userMessage) {
+          userMessage = userMessage.toLowerCase();
+
+          // Check for keywords related to common car problems
+          if (userMessage.includes('freno') || userMessage.includes('frenos')) {
+            return "Problemas con los frenos pueden ser muy peligrosos. Posibles causas incluyen pastillas desgastadas, discos dañados o falta de líquido de frenos. Recomendamos una revisión inmediata.";
+          } else if (userMessage.includes('motor') || userMessage.includes('enciende')) {
+            return "Si su motor no enciende, podría ser un problema con la batería, el motor de arranque o la bomba de combustible. Le sugerimos verificar la batería y contactarnos para un diagnóstico.";
+          } else if (userMessage.includes('llanta') || userMessage.includes('llantas') || userMessage.includes('pinchada')) {
+            return "Una llanta pinchada requiere atención inmediata. Le recomendamos cambiar la llanta por la de repuesto y visitar nuestro taller para una reparación o reemplazo.";
+          } else if (userMessage.includes('bateria') || userMessage.includes('batería')) {
+             return "Los problemas de la batería pueden causar dificultades en el arranque y fallas eléctricas. Las posibles causas incluyen una batería descargada, terminales corroídos o un alternador defectuoso. Es recomendable realizar una prueba de batería y sistema de carga.";
+          }
+          else {
+            return "Gracias por tu consulta. Para darte la mejor recomendación, por favor, describe el problema de tu carro con más detalle.";
+          }
+        }
+      });
+    </script>
