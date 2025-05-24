@@ -100,6 +100,7 @@
               <a href="#marcas" class="nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors text-slate-700 hover:text-sky-600 md:text-slate-200 md:hover:text-white">Marcas</a>
               <a href="#testimonios" class="nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors text-slate-700 hover:text-sky-600 md:text-slate-200 md:hover:text-white">Testimonios</a>
               <a href="#promociones" class="nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors text-slate-700 hover:text-sky-600 md:text-slate-200 md:hover:text-white">Promociones</a>
+              <a href="#ai-diagnostico" class="nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors text-slate-700 hover:text-sky-600 md:text-slate-200 md:hover:text-white">Diagnóstico IA</a>
               <a href="#contacto" class="nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors text-slate-700 hover:text-sky-600 md:text-slate-200 md:hover:text-white">Contacto</a>
             </nav>
 
@@ -125,6 +126,7 @@
             <a href="#marcas" class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-slate-200 hover:text-white hover:bg-sky-700 transition-colors">Marcas</a>
             <a href="#testimonios" class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-slate-200 hover:text-white hover:bg-sky-700 transition-colors">Testimonios</a>
             <a href="#promociones" class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-slate-200 hover:text-white hover:bg-sky-700 transition-colors">Promociones</a>
+            <a href="#ai-diagnostico" class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-slate-200 hover:text-white hover:bg-sky-700 transition-colors">Diagnóstico IA</a>
             <a href="#contacto" class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-slate-200 hover:text-white hover:bg-sky-700 transition-colors">Contacto</a>
           </nav>
         </div>
@@ -367,6 +369,50 @@
             <p class="text-center text-sm text-slate-500 mt-8">* Todas las promociones están sujetas a disponibilidad y pueden cambiar sin previo aviso. Consulta términos y condiciones en el taller.</p>
           </div>
         </section>
+
+<!-- AI Diagnostic Section -->
+<section id="ai-diagnostico" class="py-12 md:py-20 bg-sky-50">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl md:text-4xl font-bold text-center text-sky-700 mb-8 md:mb-12">Diagnóstico Rápido con IA</h2>
+    <div class="max-w-2xl mx-auto bg-white p-6 sm:p-8 rounded-xl shadow-lg">
+      <p class="text-slate-600 mb-6 text-center">
+        Describe el problema que tiene tu vehículo y nuestra IA te proporcionará posibles causas y un nivel de urgencia estimado.
+      </p>
+      <div class="space-y-5">
+        <div>
+          <label for="ai-problem-description" class="block text-sm font-medium text-slate-700 mb-1">Describe el Problema de tu Vehículo:*</label>
+          <textarea id="ai-problem-description" name="ai-problem-description" rows="5" placeholder="Ej: Mi auto no enciende y hace un ruido como 'clic, clic'..." required class="w-full px-4 py-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition duration-150 ease-in-out text-slate-700 placeholder-slate-400"></textarea>
+        </div>
+        <div>
+          <button type="button" id="ai-submit-problem" class="w-full px-6 py-3 font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out text-white bg-sky-600 hover:bg-sky-700 focus:ring-sky-500 disabled:opacity-50 disabled:cursor-not-allowed">
+            Obtener Diagnóstico
+          </button>
+        </div>
+        <div id="ai-loading-spinner" class="text-center py-4 hidden">
+          <div role="status" class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] text-sky-600 motion-reduce:animate-[spin_1.5s_linear_infinite]" aria-label="Cargando diagnóstico...">
+            <span class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Cargando...</span>
+          </div>
+          <p class="text-slate-600 mt-2">Analizando tu problema...</p>
+        </div>
+        <div id="ai-response-area" class="p-4 bg-slate-50 rounded-lg shadow-inner hidden">
+          <!-- AI Response will be displayed here -->
+          <h4 class="text-lg font-semibold text-sky-700 mb-2">Posibles Causas:</h4>
+          <ul id="ai-possible-causes" class="list-disc list-inside text-slate-600 space-y-1">
+            <!-- <li>Causa A</li> -->
+          </ul>
+          <h4 class="text-lg font-semibold text-sky-700 mt-4 mb-2">Nivel de Urgencia:</h4>
+          <p id="ai-urgency-level" class="text-slate-600 font-medium"></p>
+          <h4 class="text-lg font-semibold text-sky-700 mt-4 mb-2">Recomendación:</h4>
+          <p id="ai-recommendation" class="text-slate-600"></p>
+        </div>
+      </div>
+      <p class="text-xs text-slate-500 mt-6 text-center">
+        <strong>Nota:</strong> Este diagnóstico es generado por una IA y es solo para fines informativos. Siempre recomendamos consultar con un mecánico profesional para una inspección completa y un diagnóstico preciso.
+      </p>
+    </div>
+  </div>
+</section>
+<!-- End AI Diagnostic Section -->
 
         <!-- Contact Us Section -->
         <section id="contacto" class="py-12 md:py-20 bg-slate-50">

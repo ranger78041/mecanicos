@@ -444,4 +444,171 @@ document.addEventListener('DOMContentLoaded', () => {
   if (currentYearSpan) {
     currentYearSpan.textContent = new Date().getFullYear();
   }
+
+  // --- AI Diagnostic Assistant ---
+  const aiProblemDescription = document.getElementById('ai-problem-description');
+  const aiSubmitButton = document.getElementById('ai-submit-problem');
+  const aiLoadingSpinner = document.getElementById('ai-loading-spinner');
+  const aiResponseArea = document.getElementById('ai-response-area');
+  const aiPossibleCausesList = document.getElementById('ai-possible-causes');
+  const aiUrgencyLevel = document.getElementById('ai-urgency-level');
+  const aiRecommendation = document.getElementById('ai-recommendation');
+
+  // Mock AI Service Function
+  function getMockAIDiagnosis(problemDescription) {
+    return new Promise((resolve, reject) => {
+      // Simulate API call delay
+      setTimeout(() => {
+        console.log(`Sending to mock AI: "${problemDescription}"`);
+        // Basic validation for demonstration
+        if (!problemDescription || problemDescription.trim().length < 10) {
+          reject({
+            status: 'error',
+            message: 'Por favor, describe el problema con más detalle (mínimo 10 caracteres).'
+          });
+          return;
+        }
+
+        // Simulate different responses based on keywords (very basic)
+        if (problemDescription.toLowerCase().includes('no enciende')) {
+          resolve({
+            status: 'success',
+            data: {
+              possibleCauses: [
+                'Batería descargada o defectuosa.',
+                'Problema con el motor de arranque (starter).',
+                'Falla en el alternador (si el auto se detuvo mientras conducías).',
+                'Sistema de combustible obstruido o bomba de combustible defectuosa.'
+              ],
+              urgency: 'Alta',
+              recommendation: 'Este problema requiere atención inmediata. Intenta pasar corriente a la batería si es posible, pero si persiste, es crucial no intentar encender el motor repetidamente y llamar a un mecánico. Podrías quedar varado.'
+            }
+          });
+        } else if (problemDescription.toLowerCase().includes('ruido') && problemDescription.toLowerCase().includes('frenos')) {
+          resolve({
+            status: 'success',
+            data: {
+              possibleCauses: [
+                'Pastillas de freno desgastadas.',
+                'Discos de freno rayados o dañados.',
+                'Calipers de freno atascados o defectuosos.',
+                'Bajo nivel de líquido de frenos (podría indicar una fuga).'
+              ],
+              urgency: 'Media a Alta',
+              recommendation: 'Se recomienda una inspección de frenos lo antes posible. Los problemas de frenos pueden comprometer seriamente tu seguridad. Evita conducir si el ruido es muy fuerte o si notas una disminución en la capacidad de frenado.'
+            }
+          });
+        } else if (problemDescription.toLowerCase().includes('humo')) {
+             resolve({
+                status: 'success',
+                data: {
+                    possibleCauses: [
+                        'Quema de aceite (sellos de válvula o anillos de pistón desgastados - humo azulado).',
+                        'Quema de refrigerante (junta de culata dañada - humo blanco y dulce).',
+                        'Problema con el sistema de combustible (mezcla rica - humo negro).',
+                        'Sobrecalentamiento del motor.'
+                    ],
+                    urgency: 'Alta',
+                    recommendation: 'El humo del escape o del motor es una señal de advertencia importante. Detén el vehículo de forma segura y apaga el motor lo antes posible para evitar daños mayores. Requiere diagnóstico profesional urgente.'
+                }
+            });
+        } else {
+          resolve({
+            status: 'success',
+            data: {
+              possibleCauses: [
+                'Inspección visual del área afectada (si es seguro hacerlo).',
+                'Verificación de niveles de fluidos (aceite, refrigerante, etc.).',
+                'Considerar si el problema es intermitente o constante.'
+              ],
+              urgency: 'Variable',
+              recommendation: 'La información proporcionada es general. Para un diagnóstico preciso, por favor, proporciona más detalles o consulta con un mecánico calificado. Recuerda que esta IA solo ofrece sugerencias basadas en la descripción.'
+            }
+          });
+        }
+      }, 1500); // Simulate 1.5 seconds delay
+    });
+  }
+
+  if (aiSubmitButton && aiProblemDescription && aiLoadingSpinner && aiResponseArea && aiPossibleCausesList && aiUrgencyLevel && aiRecommendation) {
+    aiSubmitButton.addEventListener('click', async () => {
+      const problem = aiProblemDescription.value;
+
+      // Clear previous results and hide response area
+      aiPossibleCausesList.innerHTML = '';
+      aiUrgencyLevel.textContent = '';
+      aiRecommendation.textContent = '';
+      aiResponseArea.classList.add('hidden');
+      aiSubmitButton.disabled = true; // Disable button during processing
+
+      // Basic client-side validation
+      if (!problem || problem.trim() === '') {
+        aiLoadingSpinner.classList.add('hidden'); // Hide if it was shown
+        // Display error directly in the response area or a dedicated error div
+        aiPossibleCausesList.innerHTML = '<li>Por favor, describe el problema de tu vehículo.</li>';
+        aiUrgencyLevel.textContent = 'Error';
+        aiRecommendation.textContent = 'El campo de descripción no puede estar vacío.';
+        aiResponseArea.classList.remove('hidden');
+        aiResponseArea.classList.remove('bg-slate-50');
+        aiResponseArea.classList.add('bg-red-100', 'text-red-700', 'border', 'border-red-300'); // Error styling
+        aiSubmitButton.disabled = false;
+        return;
+      }
+       // Restore normal styling if it was an error before
+      aiResponseArea.classList.add('bg-slate-50');
+      aiResponseArea.classList.remove('bg-red-100', 'text-red-700', 'border', 'border-red-300');
+
+
+      aiLoadingSpinner.classList.remove('hidden');
+
+      try {
+        const response = await getMockAIDiagnosis(problem);
+        
+        if (response.status === 'success') {
+          const { possibleCauses, urgency, recommendation } = response.data;
+          
+          if (possibleCauses && possibleCauses.length > 0) {
+            possibleCauses.forEach(cause => {
+              const li = document.createElement('li');
+              li.textContent = cause;
+              aiPossibleCausesList.appendChild(li);
+            });
+          } else {
+            const li = document.createElement('li');
+            li.textContent = 'No se identificaron causas específicas con la información proporcionada.';
+            aiPossibleCausesList.appendChild(li);
+          }
+
+          aiUrgencyLevel.textContent = urgency || 'No especificado';
+          aiRecommendation.textContent = recommendation || 'No hay recomendaciones adicionales.';
+          
+          aiResponseArea.classList.remove('hidden');
+        } else {
+          // Handle errors reported by the mock service (e.g., validation errors)
+          aiPossibleCausesList.innerHTML = ''; // Clear any previous list items
+          aiUrgencyLevel.textContent = 'Error en el Diagnóstico';
+          aiRecommendation.textContent = response.message || 'Un error desconocido ocurrió.';
+          aiResponseArea.classList.remove('hidden');
+          aiResponseArea.classList.remove('bg-slate-50');
+          aiResponseArea.classList.add('bg-red-100', 'text-red-700', 'border', 'border-red-300'); // Error styling
+        }
+      } catch (error) {
+        // Handle network-like errors or exceptions from the mock service
+        console.error("Error en el diagnóstico IA:", error);
+        aiPossibleCausesList.innerHTML = '';
+        aiUrgencyLevel.textContent = 'Error Crítico';
+        aiRecommendation.textContent = error.message || 'No se pudo obtener un diagnóstico. Intenta de nuevo más tarde.';
+        aiResponseArea.classList.remove('hidden');
+        aiResponseArea.classList.remove('bg-slate-50');
+        aiResponseArea.classList.add('bg-red-100', 'text-red-700', 'border', 'border-red-300'); // Error styling
+      } finally {
+        aiLoadingSpinner.classList.add('hidden');
+        aiSubmitButton.disabled = false; // Re-enable button
+      }
+    });
+  } else {
+    console.warn("Algunos elementos del formulario de diagnóstico IA no fueron encontrados en el DOM.");
+  }
+
+  // --- End AI Diagnostic Assistant ---
 });
