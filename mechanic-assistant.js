@@ -75,9 +75,25 @@ function createChatBubble(message, isUser = false) {
 }
 
 function initMechanicAssistant() {
+  const assistant = document.getElementById('mechanic-assistant');
   const chatContainer = document.getElementById('chat-container');
   const messageInput = document.getElementById('message-input');
   const sendButton = document.getElementById('send-button');
+  const toggleButton = document.getElementById('toggle-chat');
+
+  // Manejar minimizar/maximizar
+  toggleButton.addEventListener('click', () => {
+    const isMinimized = assistant.classList.contains('minimized');
+    assistant.classList.toggle('minimized');
+    assistant.classList.toggle('expanded');
+    toggleButton.textContent = isMinimized ? '−' : '+';
+  });
+
+  // Mensaje inicial
+  setTimeout(() => {
+    const welcomeMessage = "¡Hola! Soy tu asistente virtual. ¿Podrías describir el problema que estás teniendo con tu vehículo?";
+    chatContainer.appendChild(createChatBubble(welcomeMessage, false));
+  }, 500);
 
   function handleMessage() {
     const message = messageInput.value.trim();

@@ -87,6 +87,30 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      transition: height 0.3s ease;
+    }
+
+    #mechanic-assistant.minimized {
+      height: 50px;
+    }
+
+    #mechanic-assistant.expanded {
+      height: 425px;
+    }
+
+    .toggle-button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 0 5px;
+    }
+
+    .chat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .chat-header {
@@ -611,9 +635,10 @@
         </svg>
       </button>
       <!-- Chat Assistant -->
-      <div id="mechanic-assistant">
+      <div id="mechanic-assistant" class="expanded">
         <div class="chat-header">
-          Asistente Virtual
+          <span>Asistente Virtual</span>
+          <button id="toggle-chat" class="toggle-button">−</button>
         </div>
         <div id="chat-container">
         </div>
