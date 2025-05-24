@@ -1,80 +1,52 @@
+// Configuración del chat
+let isMinimized = false;
 
-// Definir niveles de urgencia y respuestas comunes
-const URGENCY_LEVELS = {
-  HIGH: "Alta - Requiere atención inmediata",
-  MEDIUM: "Media - Programar revisión esta semana",
-  LOW: "Baja - Puede esperar a próximo mantenimiento"
-};
+async function getOpenAIResponse(userMessage) {
+  try {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            role: "system",
+            content: "Eres un asistente especializado en mecánica automotriz. Solo respondes preguntas relacionadas con problemas de automóviles, diagnósticos y recomendaciones mecánicas. Para otros temas, indicas amablemente que solo puedes ayudar con temas automotrices."
+          },
+          {
+            role: "user",
+            content: userMessage
+          }
+        ],
+        temperature: 0.7,
+        max_tokens: 150
+      })
+    });
 
-const commonProblems = {
-  'ruido': {
-    urgency: URGENCY_LEVELS.MEDIUM,
-    causes: [
-      "Problemas en la suspensión",
-      "Rodamientos desgastados",
-      "Frenos en mal estado"
-    ],
-    recommendations: [
-      "Agendar una revisión para diagnosticar el origen exacto del ruido",
-      "Evitar circular a alta velocidad hasta la revisión",
-      "Tomar nota de cuándo y en qué condiciones ocurre el ruido"
-    ]
-  },
-  'frenos': {
-    urgency: URGENCY_LEVELS.HIGH,
-    causes: [
-      "Pastillas desgastadas",
-      "Discos rayados",
-      "Líquido de frenos bajo"
-    ],
-    recommendations: [
-      "Acudir inmediatamente al taller",
-      "Evitar conducir si el pedal está muy suave",
-      "Mantener mayor distancia con otros vehículos"
-    ]
-  },
-  'motor': {
-    urgency: URGENCY_LEVELS.HIGH,
-    causes: [
-      "Falta de mantenimiento",
-      "Problemas de inyección",
-      "Fallas eléctricas"
-    ],
-    recommendations: [
-      "Traer el vehículo a revisión inmediata",
-      "Evitar conducir largas distancias",
-      "Tomar nota de cualquier luz de advertencia"
-    ]
-  }
-};
-
-function analyzeCarProblem(description) {
-  description = description.toLowerCase();
-  let response = {
-    urgency: URGENCY_LEVELS.LOW,
-    causes: ["Se requiere más información para un diagnóstico preciso"],
-    recommendations: ["Agendar una revisión general"]
-  };
-
-  // Analizar el texto para encontrar palabras clave
-  for (const [problem, data] of Object.entries(commonProblems)) {
-    if (description.includes(problem)) {
-      response = data;
-      break;
+    if (!response.ok) {
+      throw new Error('Error en la conexión con OpenAI');
     }
+
+    const data = await response.json();
+    return data.choices[0].message.content;
+  } catch (error) {
+    console.error('Error:', error);
+    return "Lo siento, ha ocurrido un error. Por favor, intenta de nuevo.";
   }
-
-  return response;
 }
 
-function createChatBubble(message, isUser = false) {
+function addMessage(message, sender) {
   const bubble = document.createElement('div');
-  bubble.className = `chat-bubble ${isUser ? 'user' : 'assistant'}`;
+  bubble.classList.add('chat-bubble', sender);
   bubble.textContent = message;
-  return bubble;
+  chatContainer.appendChild(bubble);
+  chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
-function initMechanicAssistant() {
+document.addEventListener('DOMContentLoaded', function() {
   const assistant = document.getElementById('mechanic-assistant');
   const chatContainer = document.getElementById('chat-container');
   const messageInput = document.getElementById('message-input');
@@ -83,51 +55,34 @@ function initMechanicAssistant() {
 
   // Manejar minimizar/maximizar
   toggleButton.addEventListener('click', () => {
-    const isMinimized = assistant.classList.contains('minimized');
-    assistant.classList.toggle('minimized');
-    assistant.classList.toggle('expanded');
-    toggleButton.textContent = isMinimized ? '−' : '+';
+    isMinimized = !isMinimized;
+    assistant.classList.toggle('minimized', isMinimized);
+    assistant.classList.toggle('expanded', !isMinimized);
+    toggleButton.textContent = isMinimized ? '+' : '−';
   });
 
   // Mensaje inicial
-  setTimeout(() => {
-    const welcomeMessage = "¡Hola! Soy tu asistente virtual. ¿Podrías describir el problema que estás teniendo con tu vehículo?";
-    chatContainer.appendChild(createChatBubble(welcomeMessage, false));
-  }, 500);
+  const welcomeMessage = "¡Hola! Soy tu asistente virtual especializado en mecánica automotriz. ¿En qué puedo ayudarte con tu vehículo?";
+  addMessage(welcomeMessage, 'assistant');
 
-  function handleMessage() {
-    const message = messageInput.value.trim();
-    if (!message) return;
+  async function handleMessage() {
+    const messageText = messageInput.value.trim();
+    if (messageText === '') return;
 
     // Mostrar mensaje del usuario
-    chatContainer.appendChild(createChatBubble(message, true));
+    addMessage(messageText, 'user');
     messageInput.value = '';
 
-    // Analizar el problema y generar respuesta
-    const analysis = analyzeCarProblem(message);
-    
-    // Crear respuesta del asistente
-    const response = `
-    Nivel de urgencia: ${analysis.urgency}
-    
-    Posibles causas:
-    ${analysis.causes.join('\n')}
-    
-    Recomendaciones:
-    ${analysis.recommendations.join('\n')}
-    `;
-
-    // Mostrar respuesta con pequeño delay para simular procesamiento
-    setTimeout(() => {
-      chatContainer.appendChild(createChatBubble(response));
-      chatContainer.scrollTop = chatContainer.scrollHeight;
-    }, 500);
+    // Obtener y mostrar respuesta del asistente
+    const response = await getOpenAIResponse(messageText);
+    addMessage(response, 'assistant');
   }
 
   sendButton.addEventListener('click', handleMessage);
   messageInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') handleMessage();
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleMessage();
+    }
   });
-}
-
-window.addEventListener('load', initMechanicAssistant);
+});
